@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class Age{
 	private $img;
 	public function __construct($img){
@@ -28,40 +28,19 @@ class Age{
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($curl, CURLOPT_FAILONERROR, false);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_HEADER, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
     if (1 == strpos("$".$host, "https://"))
     {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
     }
     curl_setopt($curl, CURLOPT_POSTFIELDS, $bodys);
-	
+	//重要参数,想更全面了解可以自己打印看看
     $output=curl_exec($curl);
-	 preg_match('/age.*errno/',$output,$out);
-	// array_push($out,"asd".":"."asd");
-	// $str=implode('g',$out);
-	// $age=substr($str,7,1);
-	// $result=preg_replace('/[^\0123456789]/s', '', $out);
-	  $result=preg_replace('/\D/s', '', $out);
-	  $result=substr($result[0],0,2);
-	 
-	if(empty($result)||!isset($result)){
-		$result=100;
-		
-	}
-	
-	// if(is_numeric($age)){
-		// if(is_numeric(substr($str,7,2))){
-		// $result=substr($str,7,2);
-		// }else{
-			// $result=$age;
-		// }
-	// }else{
-		// $result="无法识别,请更换图片";
-	// }
-	
+	$result=json_decode($output,true);
+	$jsonarr=$result['outputs'][0]['outputValue']['dataValue'];
 	curl_close($curl);
-	return $result;
+	return $jsonarr;
 	}
 }
 ?>
